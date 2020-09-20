@@ -12,19 +12,17 @@ function parseUrl(url) {
     const match = url.match(playListRegex);
     if (match && match[2]){
         parsedResult.isPlaylist = true;
-        parsedResult.url = match[2];
-        return parsedResult;
+        parsedResult.playlistID = match[2];
     }
-    parsedResult.videoUrl = url.match(videoIDRegex);
+    parsedResult.url = url.match(videoIDRegex);
     return parsedResult;
 }
 
 function clickDownloadButton($event) {
     const downloadType = $event.target.id;
-    chrome.tabs.query({'active' : true, 'windowId': chrome.windows.WINDOW_ID_CURRENT}, (tabs) => {
-        const url = tabs[0].url;
-        const downloadUrl = `${hostUrl}/download_chrome_ex?videoUrl=${videoUrl.url}&downloadType=${downloadType}`;
-        chrome.tabs.create({url: downloadUrl});
+    const downloadUrl = `${hostUrl}/youtube-downloader-extension?videoUrl=${videoUrl.url}&downloadType=${downloadType}`;
+    chrome.runtime.sendMessage({url: downloadUrl}, function(res){
+        console.log(res);
     });
 }
 
