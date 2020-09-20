@@ -11,6 +11,7 @@
     "browser_action":   {
       "default_icon": "assets/img/youtubeDownloader128.png",
       "default_popup" : "index.html"
-    }
+    },
+    "permissions": [ "tabs" ]
   }
   
