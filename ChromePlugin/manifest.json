@@ -1,0 +1,16 @@
+{
+    "name": "YouTube Downloader",
+    "description": "A Chrome extension that let's you download youtube videos",
+    "version": "1.0",
+    "author": "PavanSkipo",
+    "manifest_version": 2,
+    "icons": {
+        "16": "assets/img/youtubeDownloader16.png",
+        "48": "assets/img/youtubeDownloader48.png",
+        "128": "assets/img/youtubeDownloader128.png" },
+    "browser_action":   {
+      "default_icon": "assets/img/youtubeDownloader128.png",
+      "default_popup" : "index.html"
+    }
+  }
+  
