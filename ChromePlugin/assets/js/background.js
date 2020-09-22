@@ -1,5 +1,9 @@
-chrome.runtime.onMessage.addListener(function(request, sender, callback){
+chrome.runtime.onMessage.addListener(async function(request, sender, sendResponse){
+  if (request.isPlaylist) {
+    fetch(request.url).then(r => r.text());
+  } else {
     chrome.downloads.download({url: request.url});
-    callback('Started Download');
-  });
+  }
+  sendResponse('Started Download...');
+});
   

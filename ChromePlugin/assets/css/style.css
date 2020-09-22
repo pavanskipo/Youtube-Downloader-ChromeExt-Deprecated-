@@ -75,6 +75,10 @@ button:active:after {
     opacity: 1;
     transition: 0s
 }
+button[disabled], button[disabled]:hover {
+    opacity: 0.5;
+    cursor: not-allowed;
+ }
 
 div.Audio > button {
     background-color: #7BC950;

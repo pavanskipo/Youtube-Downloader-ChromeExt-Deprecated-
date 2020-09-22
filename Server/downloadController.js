@@ -1,4 +1,7 @@
 const ytdl = require('ytdl-core');
+const ytpl = require('ytpl');
+const fs = require('fs');
+const path = require('path');
 
 downloadAudio = (url, res) => {
     var stream = ytdl(url, { filter: 'audioonly'});
@@ -22,8 +25,28 @@ downloadVideo = (url, res) => {
     });
 }
 
-downloadPlaylist = (url, res) => {
-    //TO DO
+downloadPlaylist = (id, res) => {
+    ytpl(id, { limit: Infinity }).then(playlist => {
+        res.writeHead(200);
+        res.end('Playlist Downloading...')
+        const dirName = (playlist.title).replace(/ /g,"_");;
+        const filePath = path.resolve(__dirname, 'Downloads', dirName);
+        if (!fs.existsSync(filePath)) {
+            fs.mkdirSync(path.resolve('Downloads', dirName))
+        }
+        playlist.items.forEach((video) => {
+            title = (video.title).replace(/[ \.]/g,"_");
+            let fstream = fs.createWriteStream(path.resolve(filePath, title + '.mp4'));
+           
+            ytdl(video.url)
+                .pipe(fstream);
+
+            fstream.on('error', function(err) {
+                fs.appendFileSync(path.resolve(filePath, 'errorDownloading.txt'), title);
+            });
+        });
+
+    });
 }
 
 beginDownload = (req, res, videoUrl, downloadType) => {

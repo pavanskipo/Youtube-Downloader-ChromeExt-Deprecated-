@@ -20,9 +20,12 @@ function parseUrl(url) {
 
 function clickDownloadButton($event) {
     const downloadType = $event.target.id;
-    const downloadUrl = `${hostUrl}/youtube-downloader-extension?videoUrl=${videoUrl.url}&downloadType=${downloadType}`;
-    chrome.runtime.sendMessage({url: downloadUrl}, function(res){
-        console.log(res);
+    const videoUrlQuery = (downloadType === 'Playlist')?videoUrl.playlistID:videoUrl.url;
+    const downloadUrl = `${hostUrl}/youtube-downloader-extension?videoUrl=${videoUrlQuery}&downloadType=${downloadType}`;
+    chrome.runtime.sendMessage({url: downloadUrl, isPlaylist: (downloadType === 'Playlist')}, function(res){
+        let downloadButton = document.querySelector(`button#${downloadType}`);
+        downloadButton.innerHTML = `<span>${res}</span>`;
+        downloadButton.disabled = true;
     });
 }
 
