@@ -20,9 +20,16 @@ function parseUrl(url) {
 
 function clickDownloadButton($event) {
     const downloadType = $event.target.id;
-    const videoUrlQuery = (downloadType === 'Playlist')?videoUrl.playlistID:videoUrl.url;
+    let videoUrlQuery = '';
+    let isPlaylist = false;
+    if (downloadType === 'Playlist' || downloadType === 'PlaylistAudio') {
+        isPlaylist = true;
+        videoUrlQuery = videoUrl.playlistID;
+    } else {
+        videoUrlQuery = videoUrl.url;
+    }
     const downloadUrl = `${hostUrl}/youtube-downloader-extension?videoUrl=${videoUrlQuery}&downloadType=${downloadType}`;
-    chrome.runtime.sendMessage({url: downloadUrl, isPlaylist: (downloadType === 'Playlist')}, function(res){
+    chrome.runtime.sendMessage({url: downloadUrl, isPlaylist: isPlaylist}, function(res){
         let downloadButton = document.querySelector(`button#${downloadType}`);
         downloadButton.innerHTML = `<span>${res}</span>`;
         downloadButton.disabled = true;
@@ -48,8 +55,9 @@ window.onload = () => {
         let containerDiv = document.getElementById("download-btn-container");
         let buttonTypes = ['Audio', 'Video'];
         if (videoUrl.isPlaylist) {
+            buttonTypes.splice(1, 0, 'PlaylistAudio')
             buttonTypes.push('Playlist');
-            document.body.style.height = 200;
+            document.body.style.height = 260;
         }
         buttonTypes.forEach(buttonType => containerDiv.appendChild(createButton(buttonType)));
     });

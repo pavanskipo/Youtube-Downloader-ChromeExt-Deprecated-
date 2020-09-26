@@ -10,14 +10,15 @@ A simple chrome extension that lets you download youtube videos
 
 ## How to set it up?
 **Chrome Extension:**
-1. Go to `chrome://extensions` ([link](chrome://extensions)) 
+1. Go to `chrome://extensions`
 2. Turn on Developer mode
 3. Select **Load Unpacked** and open the folder **ChromePlugin**
 
 
 **Server Setup:**
 1. Move inside **Server** folder and run `npm install`
-2. Run `node app.js` (need to make this a daemon process)
+2. Run `node app.js` (use pm2 to make this a daemon process)
+
 
 
 

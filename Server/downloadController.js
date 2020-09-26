@@ -49,6 +49,30 @@ downloadPlaylist = (id, res) => {
     });
 }
 
+downloadPlaylistAudio = (id, res) => {
+    ytpl(id, { limit: Infinity }).then(playlist => {
+        res.writeHead(200);
+        res.end('Playlist Downloading...')
+        const dirName = (playlist.title).replace(/ /g,"_");;
+        const filePath = path.resolve(__dirname, 'Downloads', dirName);
+        if (!fs.existsSync(filePath)) {
+            fs.mkdirSync(path.resolve('Downloads', dirName))
+        }
+        playlist.items.forEach((video) => {
+            title = (video.title).replace(/[ \.]/g,"_");
+            let fstream = fs.createWriteStream(path.resolve(filePath, title + '.mp3'));
+           
+            ytdl(video.url, {filter: 'audioonly', quality: 'highestaudio'})
+                .pipe(fstream);
+
+            fstream.on('error', function(err) {
+                fs.appendFileSync(path.resolve(filePath, 'errorDownloading.txt'), title);
+            });
+        });
+
+    });
+}
+
 beginDownload = (req, res, videoUrl, downloadType) => {
     switch (downloadType) {
         case 'Video':
@@ -59,6 +83,9 @@ beginDownload = (req, res, videoUrl, downloadType) => {
             break;
         case 'Playlist':
             downloadPlaylist(videoUrl, res);
+            break;
+        case 'PlaylistAudio':
+            downloadPlaylistAudio(videoUrl, res);
             break;
         default:
             downloadVideo(videoUrl, res);

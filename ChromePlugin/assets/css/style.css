@@ -80,13 +80,13 @@ button[disabled], button[disabled]:hover {
     cursor: not-allowed;
  }
 
-div.Audio > button {
+div.Audio > button, div.PlaylistAudio > button {
     background-color: #7BC950;
 }
-div.Audio > button:hover {
+div.Audio > button:hover, div.PlaylistAudio > button:hover {
     background:#fff;
 }
-div.Audio > button:After {
+div.Audio > button:After, div.PlaylistAudio > button:after {
     background: #7BC950;
 }
 
