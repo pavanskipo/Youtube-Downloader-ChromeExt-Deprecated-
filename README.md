@@ -6,6 +6,7 @@ A simple chrome extension that lets you download youtube videos
 ## What can you do with this?
 - Download the **Audio (.mp3)** of a video.
 - Download the **Video** in **.mp4** format
+- Download the whole **Playlist** in **.mp3** format
 - Download the whole **Playlist** in **.mp4** format
 
 ## How to set it up?
