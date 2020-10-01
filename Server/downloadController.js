@@ -2,26 +2,35 @@ const ytdl = require('ytdl-core');
 const ytpl = require('ytpl');
 const fs = require('fs');
 const path = require('path');
+const contentDisposition = require('content-disposition');
+
+replaceSpecialChar = (str) => {
+    return str.replace(/[ ]/g, "_");
+}
 
 downloadAudio = (url, res) => {
     var stream = ytdl(url, { filter: 'audioonly'});
     stream.on('info', (info) => {
-    res.writeHead(200, {'Content-Disposition': `attachment; filename=${info.videoDetails.title}.mp3`});
+        const title = contentDisposition(replaceSpecialChar(info.videoDetails.title) + '.mp3');
+        res.writeHead(200, {'Content-Disposition': `attachment; filename=${title}`});
 
-    ytdl(url, {
-        format: 'mp3'
-        }).pipe(res);
+        ytdl(url, {
+            format: 'mp3',
+            quality: 'highest'
+            }).pipe(res);
     });
 }
 
 downloadVideo = (url, res) => {
     var stream = ytdl(url);
     stream.on('info', (info) => {
-    res.writeHead(200, {'Content-Disposition': `attachment; filename=${info.videoDetails.title}.mp4`});
+        const title = contentDisposition(replaceSpecialChar(info.videoDetails.title) + '.mp4');
+        res.writeHead(200, {'Content-Disposition': `attachment; filename=${title}`});
 
-    ytdl(url, {
-        format: 'mp4'
-        }).pipe(res);
+        ytdl(url, {
+            format: 'mp4',
+            quality: 'highest'
+            }).pipe(res);
     });
 }
 
@@ -29,16 +38,16 @@ downloadPlaylist = (id, res) => {
     ytpl(id, { limit: Infinity }).then(playlist => {
         res.writeHead(200);
         res.end('Playlist Downloading...')
-        const dirName = (playlist.title).replace(/ /g,"_");;
+        const dirName = replaceSpecialChar(playlist.title);
         const filePath = path.resolve(__dirname, 'Downloads', dirName);
         if (!fs.existsSync(filePath)) {
             fs.mkdirSync(path.resolve('Downloads', dirName))
         }
         playlist.items.forEach((video) => {
-            title = (video.title).replace(/[ \.]/g,"_");
+            title = replaceSpecialChar(video.title);
             let fstream = fs.createWriteStream(path.resolve(filePath, title + '.mp4'));
            
-            ytdl(video.url)
+            ytdl(video.url, { quality: 'highest'})
                 .pipe(fstream);
 
             fstream.on('error', function(err) {
@@ -53,13 +62,13 @@ downloadPlaylistAudio = (id, res) => {
     ytpl(id, { limit: Infinity }).then(playlist => {
         res.writeHead(200);
         res.end('Playlist Downloading...')
-        const dirName = (playlist.title).replace(/ /g,"_");;
+        const dirName = replaceSpecialChar(playlist.title);
         const filePath = path.resolve(__dirname, 'Downloads', dirName);
         if (!fs.existsSync(filePath)) {
             fs.mkdirSync(path.resolve('Downloads', dirName))
         }
         playlist.items.forEach((video) => {
-            title = (video.title).replace(/[ \.]/g,"_");
+            title = replaceSpecialChar(video.title);
             let fstream = fs.createWriteStream(path.resolve(filePath, title + '.mp3'));
            
             ytdl(video.url, {filter: 'audioonly', quality: 'highestaudio'})
