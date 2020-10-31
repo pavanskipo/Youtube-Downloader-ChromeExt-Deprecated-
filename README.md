@@ -1,5 +1,7 @@
 
-# Youtube Downloader Chrome Extension
+# Note: A newer version of this is available here - [ChromeExt](https://github.com/pavanskipo/Youtube-Downloader-ChromeExt) this new one doesn't require any server to be run in the background.
+
+# Youtube Downloader Chrome Extension (Deprecated)
 A simple chrome extension that lets you download youtube videos
 ( Note: Only download your own videos )
 
